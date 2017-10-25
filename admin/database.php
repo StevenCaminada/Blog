@@ -6,9 +6,9 @@ define('ADMINISTRATION', TRUE);
 define('AUTHENTICATION', TRUE);
 
 #===============================================================================
-# INCLUDE: Main configuration
+# INCLUDE: Initialization
 #===============================================================================
-require_once '../core/application.php';
+require '../core/application.php';
 
 #===============================================================================
 # Execute database command(s)
@@ -47,6 +47,6 @@ try {
 # CATCH: Template\Exception
 #===============================================================================
 catch(Template\Exception $Exception) {
-	$Exception->defaultHandler();
+	Application::exit($Exception->getMessage());
 }
 ?>

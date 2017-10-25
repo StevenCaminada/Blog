@@ -34,7 +34,7 @@ class Application {
 	}
 
 	#===============================================================================
-	# Return singleton PDO database instance
+	# Return singleton Database instance
 	#===============================================================================
 	public static function getDatabase($force = FALSE): Database {
 		if(!self::$Database instanceof Database OR $force === TRUE) {
@@ -42,8 +42,6 @@ class Application {
 			$basename = self::get('DATABASE.BASENAME');
 			$username = self::get('DATABASE.USERNAME');
 			$password = self::get('DATABASE.PASSWORD');
-
-			self::set('DATABASE.PASSWORD', NULL);
 
 			self::$Database = new Database($hostname, $basename, $username, $password);
 		}
@@ -56,8 +54,13 @@ class Application {
 	#===============================================================================
 	public static function getLanguage($force = FALSE): Language {
 		if(!self::$Language instanceof Language OR $force === TRUE) {
+			$template_name = self::get('TEMPLATE.NAME');
+			$template_lang = self::get('TEMPLATE.LANG');
+
 			$Language = new Language(self::get('CORE.LANGUAGE'));
-			$Language->loadLanguage(ROOT.'template/'.self::get('TEMPLATE.NAME').'/lang/'.self::get('TEMPLATE.LANG').'.php');
+			$Language->load(sprintf(ROOT.'core/language/%s.php', Application::get('CORE.LANGUAGE')));
+			$Language->load(sprintf(ROOT.'template/%s/lang/%s.php', $template_name, $template_lang));
+
 			self::$Language = $Language;
 		}
 
@@ -133,15 +136,30 @@ class Application {
 	#===============================================================================
 	public static function getTemplateURL($more = ''): string {
 		$template = self::get('TEMPLATE.NAME');
-		return Application::getURL("template/{$template}/{$more}");
+		return self::getURL("template/{$template}/{$more}");
 	}
 
 	#===============================================================================
-	# Exit application with
+	# Exit application with a custom message and status code
 	#===============================================================================
-	public static function exit($code = 500) {
+	public static function exit($message = '', $code = 503): void {
 		http_response_code($code);
-		$code === 404 AND require_once(ROOT."system/404.php");
+		exit($message);
+	}
+
+	#===============================================================================
+	# Exit application with the 403 error page
+	#===============================================================================
+	public static function error403(): void {
+		require ROOT.'403.php';
+		exit();
+	}
+
+	#===============================================================================
+	# Exit application with the 404 error page
+	#===============================================================================
+	public static function error404(): void {
+		require ROOT.'404.php';
 		exit();
 	}
 }

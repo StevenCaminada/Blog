@@ -4,7 +4,7 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 #                                                                              #
 # This file contains template internationalization strings for the EN language #
-# and is completely independent from the core internationalization strings.    #
+# and can also overwrite the existing core internationalization strings.       #
 #                                                                              #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
@@ -25,7 +25,7 @@ $LANGUAGE['navigation_search_desc'] = 'Fulltext search';
 # Start page title and description
 #===============================================================================
 $LANGUAGE['home_heading_text'] = 'Welcome to %s';
-$LANGUAGE['home_heading_desc'] = 'Here you can see the last 10 published posts. Have fun!';
+$LANGUAGE['home_heading_desc'] = 'Here you can see the last %d published posts. Have fun!';
 
 #===============================================================================
 # Item overview description
@@ -68,5 +68,5 @@ $LANGUAGE['403_heading_desc'] = 'You are denied to access this resource because 
 # Error 404
 #===============================================================================
 $LANGUAGE['404_heading_text'] = 'Not found';
-$LANGUAGE['404_heading_desc'] = 'The requested resource could not be found on this server.';
+$LANGUAGE['404_heading_desc'] = 'The requested resource could not be found.';
 ?>

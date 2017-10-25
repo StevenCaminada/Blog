@@ -4,9 +4,14 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 #                                                                              #
 # This file contains template internationalization strings for the EN language #
-# and is completely independent from the core internationalization strings.    #
+# and can also overwrite the existing core internationalization strings.       #
 #                                                                              #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+#===============================================================================
+# Date format
+#===============================================================================
+$LANGUAGE['date_format'] = '[Y]-[M]-[D]';
 
 #===============================================================================
 # Item last text
@@ -37,6 +42,12 @@ $LANGUAGE['delete_post_desc'] = 'If you do not need this post anymore, you can p
 $LANGUAGE['delete_user_desc'] = 'If you do not need this user anymore, you can permanently delete it by clicking the following button.';
 
 #===============================================================================
+# Search item description
+#===============================================================================
+$LANGUAGE['search_page_desc'] = 'Here you can search a page with the <em>boolean full-text search</em> (see <a href="https://dev.mysql.com/doc/refman/5.6/en/fulltext-boolean.html">MySQL documentation</a>).';
+$LANGUAGE['search_post_desc'] = 'Here you can search a post with the <em>boolean full-text search</em> (see <a href="https://dev.mysql.com/doc/refman/5.6/en/fulltext-boolean.html">MySQL documentation</a>).';
+
+#===============================================================================
 # Item overview description
 #===============================================================================
 $LANGUAGE['overview_page_desc'] = 'Here you can see all existing pages.';
@@ -44,23 +55,15 @@ $LANGUAGE['overview_post_desc'] = 'Here you can see all existing posts.';
 $LANGUAGE['overview_user_desc'] = 'Here you can see all existing users.';
 
 #===============================================================================
-# Dashboard overview text
+# Dashboard
 #===============================================================================
 $LANGUAGE['overview_dashboard_text'] = 'Dashboard';
-
-#===============================================================================
-# Dashboard overview text
-#===============================================================================
 $LANGUAGE['overview_dashboard_desc'] = 'Welcome to the administration area. Here you can manage your content.';
 
 #===============================================================================
-# Database overview text
+# Database
 #===============================================================================
 $LANGUAGE['overview_database_text'] = 'Database';
-
-#===============================================================================
-# Database overview text
-#===============================================================================
 $LANGUAGE['overview_database_desc'] = 'Perform database operations with SQL commands.';
 
 #===============================================================================
@@ -104,15 +107,40 @@ $LANGUAGE['404_heading_desc'] = 'The requested resource could not be found on th
 $LANGUAGE['sure'] = 'Are you sure?';
 
 #===============================================================================
+# Login and logout
+#===============================================================================
+$LANGUAGE['login'] = 'Login';
+$LANGUAGE['logout'] = 'Logout';
+
+#===============================================================================
+# Placeholders
+#===============================================================================
+$LANGUAGE['placeholder_search'] = 'Enter search term …';
+
+#===============================================================================
 # Labels
 #===============================================================================
-$LANGUAGE['LABEL_SLUG'] = 'Slug';
-$LANGUAGE['LABEL_USER'] = 'User';
-$LANGUAGE['LABEL_NAME'] = 'Title';
-$LANGUAGE['LABEL_INSERT'] = 'Created';
-$LANGUAGE['LABEL_UPDATE'] = 'Updated';
-$LANGUAGE['LABEL_FULLNAME'] = 'Name';
-$LANGUAGE['LABEL_MAILADDR'] = 'Email';
-$LANGUAGE['LABEL_USERNAME'] = 'Username';
-$LANGUAGE['LABEL_PASSWORD'] = 'Password';
+$LANGUAGE['label_slug'] = 'Slug';
+$LANGUAGE['label_user'] = 'User';
+$LANGUAGE['label_name'] = 'Title';
+$LANGUAGE['label_insert'] = 'Created';
+$LANGUAGE['label_update'] = 'Updated';
+$LANGUAGE['label_fullname'] = 'Name';
+$LANGUAGE['label_mailaddr'] = 'Email';
+$LANGUAGE['label_username'] = 'Username';
+$LANGUAGE['label_password'] = 'Password';
+$LANGUAGE['label_language'] = 'Language';
+
+#===============================================================================
+# Markdown
+#===============================================================================
+$LANGUAGE['markdown_bold'] = 'Bold';
+$LANGUAGE['markdown_italic'] = 'Italic';
+$LANGUAGE['markdown_heading'] = 'Heading';
+$LANGUAGE['markdown_link'] = 'Link';
+$LANGUAGE['markdown_image'] = 'Image';
+$LANGUAGE['markdown_code'] = 'Code block';
+$LANGUAGE['markdown_quote'] = 'Quote';
+$LANGUAGE['markdown_list_ul'] = 'List [unordered]';
+$LANGUAGE['markdown_list_ol'] = 'List [ordered]';
 ?>

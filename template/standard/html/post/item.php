@@ -7,14 +7,14 @@
 #                                                                              #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 ?>
-<li class="item-list-li post">
+<article class="item">
 	<header>
 		<h2>
-			<a href="<?=$POST['URL']?>"><?=escapeHTML($POST['ATTR']['NAME'])?></a>
-			<time class="brackets info" datetime="<?=$POST['ATTR']['TIME_INSERT']?>"><?=parseDatetime($POST['ATTR']['TIME_INSERT'], $Language->template('date_format'))?></time>
+			<a title="<?=$Language->text('select_post')?>: »<?=escapeHTML($POST['ATTR']['NAME'])?>«" href="<?=$POST['URL']?>"><?=escapeHTML($POST['ATTR']['NAME'])?></a>
 		</h2>
+		<time class="brackets info" datetime="<?=$POST['ATTR']['TIME_INSERT']?>"><?=parseDatetime($POST['ATTR']['TIME_INSERT'], $Language->text('date_format'))?></time>
 	</header>
-	<article>
-		<?=$POST['BODY']['HTML']?>
-	</article>
-</li>
+	<blockquote cite="<?=$POST['URL']?>">
+		<?=$POST['BODY']['HTML']()?>
+	</blockquote>
+</article>

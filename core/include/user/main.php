@@ -17,19 +17,19 @@ try {
 		$User = User\Factory::build($param);
 	}
 
-	$user_data = generateUserItemData($User);
+	$user_data = generateItemTemplateData($User);
 
 	#===============================================================================
 	# Add user data for previous and next user
 	#===============================================================================
 	try {
 		$PrevUser = User\Factory::build($User->getPrevID());
-		$user_data['PREV'] = generateUserItemData($PrevUser);
+		$user_data['PREV'] = generateItemTemplateData($PrevUser);
 	} catch(User\Exception $Exception){}
 
 	try {
 		$NextUser = User\Factory::build($User->getNextID());
-		$user_data['NEXT'] = generateUserItemData($NextUser);
+		$user_data['NEXT'] = generateItemTemplateData($NextUser);
 	} catch(User\Exception $Exception){}
 
 	#===============================================================================
@@ -62,10 +62,14 @@ try {
 		$MainTemplate->set('HTML', $UserTemplate);
 		$MainTemplate->set('HEAD', [
 			'NAME' => $user_data['ATTR']['FULLNAME'],
-			'DESC' => cut(removeLineBreaksAndTabs(removeHTML($user_data['BODY']['HTML']), ' '), Application::get('USER.DESCRIPTION_SIZE')),
+			'DESC' => description($user_data['BODY']['HTML'](), Application::get('USER.DESCRIPTION_SIZE')),
 			'PERM' => $User->getURL(),
 			'OG_IMAGES' => $User->getFiles()
 		]);
+
+		# Get access to the current item data from main template
+		$MainTemplate->set('TYPE', 'USER');
+		$MainTemplate->set('USER', $user_data);
 
 		echo $MainTemplate;
 	}
@@ -74,7 +78,7 @@ try {
 	# CATCH: Template\Exception
 	#===============================================================================
 	catch(Template\Exception $Exception) {
-		$Exception->defaultHandler();
+		Application::exit($Exception->getMessage());
 	}
 }
 
@@ -93,6 +97,7 @@ catch(User\Exception $Exception) {
 	}
 
 	catch(User\Exception $Exception) {
-		Application::exit(404);
+		Application::error404();
 	}
 }
+?>

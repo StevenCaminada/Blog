@@ -1,5 +1,5 @@
 <?php
-abstract class ItemFactory extends Factory implements FactoryInterface {
+abstract class ItemFactory extends Factory {
 
 	#===========================================================================
 	# Build instance by ID
@@ -16,7 +16,7 @@ abstract class ItemFactory extends Factory implements FactoryInterface {
 	#===========================================================================
 	# Build instance by slug
 	#===========================================================================
-	public static function buildBySlug($slug): \Item {
+	public static function buildBySlug($slug): Item {
 		$Item = (new ReflectionClass(get_called_class()))->getNamespaceName().'\\Item';
 		return self::build($Item::getIDByField('slug', $slug, \Application::getDatabase()));
 	}

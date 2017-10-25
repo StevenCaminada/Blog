@@ -19,20 +19,20 @@ try {
 
 	$User = User\Factory::build($Post->attr('user'));
 
-	$post_data = generatePostItemData($Post);
-	$user_data = generateUserItemData($User);
+	$post_data = generateItemTemplateData($Post);
+	$user_data = generateItemTemplateData($User);
 
 	#===============================================================================
 	# Add post data for previous and next post
 	#===============================================================================
 	try {
 		$PrevPost = Post\Factory::build($Post->getPrevID());
-		$post_data['PREV'] = generatePostItemData($PrevPost);
+		$post_data['PREV'] = generateItemTemplateData($PrevPost);
 	} catch(Post\Exception $Exception){}
 
 	try {
 		$NextPost = Post\Factory::build($Post->getNextID());
-		$post_data['NEXT'] = generatePostItemData($NextPost);
+		$post_data['NEXT'] = generateItemTemplateData($NextPost);
 	} catch(Post\Exception $Exception){}
 
 	#===============================================================================
@@ -47,10 +47,15 @@ try {
 		$MainTemplate->set('HTML', $PostTemplate);
 		$MainTemplate->set('HEAD', [
 			'NAME' => $post_data['ATTR']['NAME'],
-			'DESC' => cut(removeLineBreaksAndTabs(removeHTML($post_data['BODY']['HTML']), ' '), Application::get('POST.DESCRIPTION_SIZE')),
+			'DESC' => description($post_data['BODY']['HTML'](), Application::get('POST.DESCRIPTION_SIZE')),
 			'PERM' => $post_data['URL'],
 			'OG_IMAGES' => $post_data['FILE']['LIST']
 		]);
+
+		# Get access to the current item data from main template
+		$MainTemplate->set('TYPE', 'POST');
+		$MainTemplate->set('POST', $post_data);
+		$MainTemplate->set('USER', $user_data);
 
 		echo $MainTemplate;
 	}
@@ -59,7 +64,7 @@ try {
 	# CATCH: Template\Exception
 	#===============================================================================
 	catch(Template\Exception $Exception) {
-		$Exception->defaultHandler();
+		Application::exit($Exception->getMessage());
 	}
 }
 
@@ -78,7 +83,7 @@ catch(Post\Exception $Exception) {
 	}
 
 	catch(Post\Exception $Exception) {
-		Application::exit(404);
+		Application::error404();
 	}
 }
 
@@ -86,5 +91,6 @@ catch(Post\Exception $Exception) {
 # CATCH: User\Exception
 #===============================================================================
 catch(User\Exception $Exception) {
-	$Exception->defaultHandler();
+	Application::exit($Exception->getMessage());
 }
+?>

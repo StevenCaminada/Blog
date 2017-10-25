@@ -6,22 +6,23 @@ define('ADMINISTRATION', TRUE);
 define('AUTHENTICATION', TRUE);
 
 #===============================================================================
-# INCLUDE: Main configuration
+# INCLUDE: Initialization
 #===============================================================================
-require_once '../../core/application.php';
+require '../../core/application.php';
 
 $Attribute = new User\Attribute();
 
-if(HTTP::issetPOST('id', 'slug', 'username', 'password', 'fullname', 'mailaddr', 'body', 'time_insert', 'time_update', 'insert')) {
+if(HTTP::issetPOST('id', 'slug', 'username', 'password', 'fullname', 'mailaddr', 'body', 'argv', 'time_insert', 'time_update', 'insert')) {
 	$Attribute->set('id',       HTTP::POST('id') ? HTTP::POST('id') : FALSE);
-	$Attribute->set('slug',     HTTP::POST('slug') ? HTTP::POST('slug') : makeSlugURL(HTTP::POST('username')));
+	$Attribute->set('slug',     HTTP::POST('slug') ? HTTP::POST('slug') : generateSlug(HTTP::POST('username')));
 	$Attribute->set('username', HTTP::POST('username') ? HTTP::POST('username') : NULL);
 	$Attribute->set('password', HTTP::POST('password') ? password_hash(HTTP::POST('password'), PASSWORD_BCRYPT, ['cost' => 10]) : FALSE);
 	$Attribute->set('fullname', HTTP::POST('fullname') ? HTTP::POST('fullname') : NULL);
 	$Attribute->set('mailaddr', HTTP::POST('mailaddr') ? HTTP::POST('mailaddr') : NULL);
 	$Attribute->set('body',     HTTP::POST('body') ? HTTP::POST('body') : NULL);
-	$Attribute->set('time_insert', HTTP::POST('time_insert') ? HTTP::POST('time_insert') : date('Y-m-d H:i:s'));
-	$Attribute->set('time_update', HTTP::POST('time_update') ? HTTP::POST('time_update') : date('Y-m-d H:i:s'));
+	$Attribute->set('argv',     HTTP::POST('argv') ? HTTP::POST('argv') : NULL);
+	$Attribute->set('time_insert', HTTP::POST('time_insert') ?: date('Y-m-d H:i:s'));
+	$Attribute->set('time_update', HTTP::POST('time_update') ?: date('Y-m-d H:i:s'));
 
 	if(HTTP::issetPOST(['token' => Application::getSecurityToken()])) {
 		try {
@@ -46,17 +47,7 @@ try {
 	$FormTemplate->set('FORM', [
 		'TYPE' => 'INSERT',
 		'INFO' => $messages ?? [],
-		'DATA' => [
-			'ID'       => $Attribute->get('id'),
-			'SLUG'     => $Attribute->get('slug'),
-			'USERNAME' => $Attribute->get('username'),
-			'PASSWORD' => NULL,
-			'FULLNAME' => $Attribute->get('fullname'),
-			'MAILADDR' => $Attribute->get('mailaddr'),
-			'BODY'     => $Attribute->get('body'),
-			'TIME_INSERT' => $Attribute->get('time_insert'),
-			'TIME_UPDATE' => $Attribute->get('time_update'),
-		],
+		'DATA' => array_change_key_case($Attribute->getAll(['password']), CASE_UPPER),
 		'TOKEN' => Application::getSecurityToken()
 	]);
 
@@ -73,6 +64,6 @@ try {
 # CATCH: Template\Exception
 #===============================================================================
 catch(Template\Exception $Exception) {
-	$Exception->defaultHandler();
+	Application::exit($Exception->getMessage());
 }
 ?>

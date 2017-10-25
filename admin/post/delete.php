@@ -6,9 +6,9 @@ define('ADMINISTRATION', TRUE);
 define('AUTHENTICATION', TRUE);
 
 #===============================================================================
-# INCLUDE: Main configuration
+# INCLUDE: Initialization
 #===============================================================================
-require_once '../../core/application.php';
+require '../../core/application.php';
 
 #===============================================================================
 # TRY: Post\Exception
@@ -36,12 +36,7 @@ try {
 		$FormTemplate->set('FORM', [
 			'TYPE' => 'DELETE',
 			'INFO' => $messages ?? [],
-			'DATA' => [
-				'ID'   => $Attribute->get('id'),
-				'BODY' => $Attribute->get('body'),
-				'TIME_INSERT' => $Attribute->get('time_insert'),
-				'TIME_UPDATE' => $Attribute->get('time_update'),
-			],
+			'DATA' => array_change_key_case($Attribute->getAll(), CASE_UPPER),
 			'TOKEN' => Application::getSecurityToken()
 		]);
 
@@ -58,7 +53,7 @@ try {
 	# CATCH: Template\Exception
 	#===============================================================================
 	catch(Template\Exception $Exception) {
-		$Exception->defaultHandler();
+		Application::exit($Exception->getMessage());
 	}
 }
 
@@ -66,7 +61,6 @@ try {
 # CATCH: Post\Exception
 #===============================================================================
 catch(Post\Exception $Exception) {
-	Application::exit(404);
+	Application::error404();
 }
 ?>
-

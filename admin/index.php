@@ -6,21 +6,25 @@ define('ADMINISTRATION', TRUE);
 define('AUTHENTICATION', TRUE);
 
 #===============================================================================
-# INCLUDE: Main configuration
+# INCLUDE: Initialization
 #===============================================================================
-require_once '../core/application.php';
+require '../core/application.php';
 
 #===============================================================================
 # TRY: PDOException
 #===============================================================================
 try {
-	$LastPageStatement = $Database->query(sprintf('SELECT id FROM %s ORDER BY time_insert DESC LIMIT 1', Page\Attribute::TABLE));
-	$LastPostStatement = $Database->query(sprintf('SELECT id FROM %s ORDER BY time_insert DESC LIMIT 1', Post\Attribute::TABLE));
-	$LastUserStatement = $Database->query(sprintf('SELECT id FROM %s ORDER BY time_insert DESC LIMIT 1', User\Attribute::TABLE));
+	$execute = 'SELECT id FROM %s ORDER BY time_insert DESC LIMIT 1';
 
-	$PageCountStatement = $Database->query(sprintf('SELECT COUNT(*) FROM %s', Page\Attribute::TABLE));
-	$PostCountStatement = $Database->query(sprintf('SELECT COUNT(*) FROM %s', Post\Attribute::TABLE));
-	$UserCountStatement = $Database->query(sprintf('SELECT COUNT(*) FROM %s', User\Attribute::TABLE));
+	$LastPageStatement = $Database->query(sprintf($execute, Page\Attribute::TABLE));
+	$LastPostStatement = $Database->query(sprintf($execute, Post\Attribute::TABLE));
+	$LastUserStatement = $Database->query(sprintf($execute, User\Attribute::TABLE));
+
+	$execute = 'SELECT COUNT(*) FROM %s';
+
+	$PageCountStatement = $Database->query(sprintf($execute, Page\Attribute::TABLE));
+	$PostCountStatement = $Database->query(sprintf($execute, Post\Attribute::TABLE));
+	$UserCountStatement = $Database->query(sprintf($execute, User\Attribute::TABLE));
 }
 
 #===============================================================================
@@ -83,6 +87,6 @@ try {
 # CATCH: Template\Exception
 #===============================================================================
 catch(Template\Exception $Exception) {
-	$Exception->defaultHandler();
+	Application::exit($Exception->getMessage());
 }
 ?>

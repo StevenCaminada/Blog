@@ -19,20 +19,20 @@ try {
 
 	$User = User\Factory::build($Page->attr('user'));
 
-	$page_data = generatePageItemData($Page);
-	$user_data = generateUserItemData($User);
+	$page_data = generateItemTemplateData($Page);
+	$user_data = generateItemTemplateData($User);
 
 	#===============================================================================
 	# Add page data for previous and next page
 	#===============================================================================
 	try {
 		$PrevPage = Page\Factory::build($Page->getPrevID());
-		$page_data['PREV'] = generatePageItemData($PrevPage);
+		$page_data['PREV'] = generateItemTemplateData($PrevPage);
 	} catch(Page\Exception $Exception){}
 
 	try {
 		$NextPage = Page\Factory::build($Page->getNextID());
-		$page_data['NEXT'] = generatePageItemData($NextPage);
+		$page_data['NEXT'] = generateItemTemplateData($NextPage);
 	} catch(Page\Exception $Exception){}
 
 	#===============================================================================
@@ -47,10 +47,15 @@ try {
 		$MainTemplate->set('HTML', $PageTemplate);
 		$MainTemplate->set('HEAD', [
 			'NAME' => $page_data['ATTR']['NAME'],
-			'DESC' => cut(removeLineBreaksAndTabs(removeHTML($page_data['BODY']['HTML']), ' '), Application::get('PAGE.DESCRIPTION_SIZE')),
+			'DESC' => description($page_data['BODY']['HTML'](), Application::get('PAGE.DESCRIPTION_SIZE')),
 			'PERM' => $page_data['URL'],
 			'OG_IMAGES' => $page_data['FILE']['LIST']
 		]);
+
+		# Get access to the current item data from main template
+		$MainTemplate->set('TYPE', 'PAGE');
+		$MainTemplate->set('PAGE', $page_data);
+		$MainTemplate->set('USER', $user_data);
 
 		echo $MainTemplate;
 	}
@@ -59,7 +64,7 @@ try {
 	# CATCH: Template\Exception
 	#===============================================================================
 	catch(Template\Exception $Exception) {
-		$Exception->defaultHandler();
+		Application::exit($Exception->getMessage());
 	}
 }
 
@@ -78,7 +83,7 @@ catch(Page\Exception $Exception) {
 	}
 
 	catch(Page\Exception $Exception) {
-		Application::exit(404);
+		Application::error404();
 	}
 }
 
@@ -86,5 +91,6 @@ catch(Page\Exception $Exception) {
 # CATCH: User\Exception
 #===============================================================================
 catch(User\Exception $Exception) {
-	$Exception->defaultHandler();
+	Application::exit($Exception->getMessage());
 }
+?>

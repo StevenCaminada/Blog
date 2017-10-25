@@ -7,14 +7,14 @@
 #                                                                              #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 ?>
-<li class="item-list-li page">
+<article class="item">
 	<header>
 		<h2>
-			<a href="<?=$PAGE['URL']?>"><?=escapeHTML($PAGE['ATTR']['NAME'])?></a>
-			<time class="brackets info" datetime="<?=$PAGE['ATTR']['TIME_INSERT']?>"><?=parseDatetime($PAGE['ATTR']['TIME_INSERT'], $Language->template('date_format'))?></time>
+			<a title="<?=$Language->text('select_page')?>: »<?=escapeHTML($PAGE['ATTR']['NAME'])?>«" href="<?=$PAGE['URL']?>"><?=escapeHTML($PAGE['ATTR']['NAME'])?></a>
 		</h2>
+		<time class="brackets info" datetime="<?=$PAGE['ATTR']['TIME_INSERT']?>"><?=parseDatetime($PAGE['ATTR']['TIME_INSERT'], $Language->text('date_format'))?></time>
 	</header>
-	<article>
-		<p><?=excerpt($PAGE['BODY']['HTML'], 600)?></p>
-	</article>
-</li>
+	<blockquote cite="<?=$PAGE['URL']?>">
+		<p><?=excerpt($PAGE['BODY']['HTML'](), 600)?></p>
+	</blockquote>
+</article>

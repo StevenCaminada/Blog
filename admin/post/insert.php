@@ -6,20 +6,21 @@ define('ADMINISTRATION', TRUE);
 define('AUTHENTICATION', TRUE);
 
 #===============================================================================
-# INCLUDE: Main configuration
+# INCLUDE: Initialization
 #===============================================================================
-require_once '../../core/application.php';
+require '../../core/application.php';
 
 $Attribute = new Post\Attribute();
 
-if(HTTP::issetPOST('id', 'user', 'slug', 'name', 'body', 'time_insert', 'time_update', 'insert')) {
+if(HTTP::issetPOST('id', 'user', 'slug', 'name', 'body', 'argv', 'time_insert', 'time_update', 'insert')) {
 	$Attribute->set('id',   HTTP::POST('id') ? HTTP::POST('id') : FALSE);
 	$Attribute->set('user', HTTP::POST('user'));
-	$Attribute->set('slug', HTTP::POST('slug') ? HTTP::POST('slug') : makeSlugURL(HTTP::POST('name')));
+	$Attribute->set('slug', HTTP::POST('slug') ? HTTP::POST('slug') : generateSlug(HTTP::POST('name')));
 	$Attribute->set('name', HTTP::POST('name') ? HTTP::POST('name') : NULL);
 	$Attribute->set('body', HTTP::POST('body') ? HTTP::POST('body') : NULL);
-	$Attribute->set('time_insert', HTTP::POST('time_insert') ? HTTP::POST('time_insert') : date('Y-m-d H:i:s'));
-	$Attribute->set('time_update', HTTP::POST('time_update') ? HTTP::POST('time_update') : date('Y-m-d H:i:s'));
+	$Attribute->set('argv', HTTP::POST('argv') ? HTTP::POST('argv') : NULL);
+	$Attribute->set('time_insert', HTTP::POST('time_insert') ?: date('Y-m-d H:i:s'));
+	$Attribute->set('time_update', HTTP::POST('time_update') ?: date('Y-m-d H:i:s'));
 
 	if(HTTP::issetPOST(['token' => Application::getSecurityToken()])) {
 		try {
@@ -55,15 +56,7 @@ try {
 	$FormTemplate->set('FORM', [
 		'TYPE' => 'INSERT',
 		'INFO' => $messages ?? [],
-		'DATA' => [
-			'ID'   => $Attribute->get('id'),
-			'USER' => $Attribute->get('user'),
-			'SLUG' => $Attribute->get('slug'),
-			'NAME' => $Attribute->get('name'),
-			'BODY' => $Attribute->get('body'),
-			'TIME_INSERT' => $Attribute->get('time_insert'),
-			'TIME_UPDATE' => $Attribute->get('time_update'),
-		],
+		'DATA' => array_change_key_case($Attribute->getAll(), CASE_UPPER),
 		'USER_LIST' => $userAttributes ??  [],
 		'TOKEN' => Application::getSecurityToken()
 	]);
@@ -81,6 +74,6 @@ try {
 # CATCH: Template\Exception
 #===============================================================================
 catch(Template\Exception $Exception) {
-	$Exception->defaultHandler();
+	Application::exit($Exception->getMessage());
 }
 ?>
